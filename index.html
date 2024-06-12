@@ -1,34 +1,60 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study Time</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
-    <div class="container">
+    <div id="app">
         <h1>Study Time</h1>
-        <div id="formAlert" class="alert"></div>
-        <label for="discipline">Disciplina:</label>
-        <input type="text" id="discipline">
-        <label for="content">Conteúdo:</label>
-        <input type="text" id="content">
-        <button onclick="startStudy()">Iniciar Estudo</button>
-        <button onclick="finalizeStudy()">Finalizar Estudo</button>
-        <p>Hora de Início: <span id="startTime"></span></p>
-        <p>Hora Atual: <span id="currentTime"></span></p>
-        <p>Tempo de Estudo: <span id="elapsedTime"></span></p>
-        <button onclick="pauseStudy()">Pausar</button>
-        <button onclick="continueStudy()">Continuar</button>
-        <button onclick="downloadPDF()" id="summaryButton" style="display:none;">Download Resumo</button>
-        <div id="summary">
-            <p>Disciplina: <span id="summaryDiscipline"></span></p>
-            <p>Conteúdo: <span id="summaryContent"></span></p>
-            <p>Duração: <span id="summaryDuration"></span></p>
+        <form id="productForm">
+            <label for="discipline">Disciplina:</label>
+            <input type="text" id="discipline" name="discipline"><br><br>
+            <label for="content">Conteúdo:</label>
+            <input type="text" id="content" name="content"><br><br>
+            <div class="alert" id="formAlert" style="display:none;"></div>
+            <button type="button" onclick="startStudy()">Iniciar Estudo</button>
+        </form>
+        <div id="studyTracking" style="display:none;">
+            <p>Hora de Início: <span id="startTime"></span></p>
+            <p>Hora Atual: <span id="currentTime"></span></p>
+            <p>Tempo de Estudo: <span id="studyDuration"></span></p>
+            <button type="button" onclick="pauseStudy()">Pausar</button>
+            <button type="button" onclick="continueStudy()">Continuar</button>
+            <button type="button" onclick="finalizeStudy()">Finalizar</button>
+        </div>
+        <div id="history">
+            <h2>Histórico de Estudos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Disciplina</th>
+                        <th>Conteúdo</th>
+                        <th>Duração</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody">
+                    <!-- Histórico será inserido aqui -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal para o resumo -->
+        <div id="summaryModal">
+            <div id="summaryModalContent">
+                <h2>Resumo do Estudo</h2>
+                <p>Disciplina: <span id="summaryDiscipline"></span></p>
+                <p>Conteúdo: <span id="summaryContent"></span></p>
+                <p>Duração: <span id="summaryDuration"></span></p>
+                <button id="downloadSummary" onclick="downloadPDF()">Baixar PDF</button>
+                <button id="closeSummary" onclick="closeSummary()">Fechar</button>
+            </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
-    <script src="index.js"></script>
 </body>
 </html>
