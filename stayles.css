@@ -1,101 +1,112 @@
-/* Estilos CSS */
-body {
-    font-family: Arial, sans-serif;
-    background-color: rgba(79, 90, 94, 1);
-    color: #ffffff;
-    margin: 0;
-    padding: 20px;
-}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Time</title>
+    <style>
+        /* Estilos CSS */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgba(79, 90, 94, 1);
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
 
-h1, h2 {
-    color: #ffffff;
-}
+        h1, h2 {
+            color: #ffffff;
+        }
 
-form {
-    margin-bottom: 20px;
-}
+        form {
+            margin-bottom: 20px;
+        }
 
-label {
-    display: inline-block;
-    width: 100px;
-}
+        label {
+            display: inline-block;
+            width: 100px;
+        }
 
-input {
-    padding: 5px;
-}
+        input {
+            padding: 5px;
+        }
 
-button {
-    margin-top: 10px;
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 10px; /* Bordas arredondadas */
-}
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px; /* Bordas arredondadas */
+        }
 
-button:hover {
-    background-color: #45a049;
-}
+        button:hover {
+            background-color: #45a049;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-table, th, td {
-    border: 1px solid #ddd;
-}
+        table, th, td {
+            border: 1px solid #ddd;
+        }
 
-th, td {
-    padding: 8px;
-    text-align: left;
-}
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
 
-th {
-    background-color: #4CAF50;
-    color: white;
-}
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
 
-#summaryModal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    padding-top: 100px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
+        #summaryModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
 
-#summaryModalContent {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 600px;
-}
+        #summaryModalContent {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
 
-#summaryModalContent h2, p {
-    color: #333;
-}
+        #summaryModalContent h2, p {
+            color: #333;
+        }
 
-#closeSummary {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 10px;
-}
+        #closeSummary {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+        }
 
-#closeSummary:hover {
-    background-color: #45a049;
-}
+        #closeSummary:hover {
+            background-color: #45a049;
+        }
 
-.alert {
-    color: red;
-}
+        .alert {
+            color: red;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
