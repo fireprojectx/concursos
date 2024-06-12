@@ -1,4 +1,4 @@
-    <div id="app">
+       <div id="app">
         <h1>Study Time</h1>
         <form id="productForm">
             <label for="discipline">Disciplina:</label>
@@ -128,4 +128,54 @@
             document.getElementById('discipline').value = '';
             document.getElementById('content').value = '';
             document.getElementById('studyTracking').style.display = 'none';
-            document.getElementById
+            document.getElementById('startTime').innerText = '';
+            document.getElementById('currentTime').innerText = '';
+            document.getElementById('studyDuration').innerText = '';
+            paused = false;
+            accumulatedPauseTime = 0;
+        }
+
+        function showAlert(message) {
+            const alertDiv = document.getElementById('formAlert');
+            alertDiv.innerText = message;
+            alertDiv.style.display = 'block';
+        }
+
+        function clearAlert() {
+            const alertDiv = document.getElementById('formAlert');
+            alertDiv.innerText = '';
+            alertDiv.style.display = 'none';
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const discipline = document.getElementById('summaryDiscipline').innerText;
+            const content = document.getElementById('summaryContent').innerText;
+            const duration = document.getElementById('summaryDuration').innerText;
+            doc.text(`Disciplina: ${discipline}`, 10, 10);
+            doc.text(`Conteúdo: ${content}`, 10, 20);
+            doc.text(`Duração: ${duration}`, 10, 30);
+            doc.save('resumo_estudo.pdf');
+        }
+
+        function pauseStudy() {
+            if (!paused) {
+                pauseTime = new Date();
+                paused = true;
+                clearInterval(timer);
+            }
+        }
+
+        function continueStudy() {
+            if (paused) {
+                const now = new Date();
+                accumulatedPauseTime += (now - pauseTime);
+                paused = false;
+                timer = setInterval(updateCurrentTime, 1000);
+            }
+        }
+    </script>
+</body>
+</html>
+
