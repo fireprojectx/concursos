@@ -1,83 +1,130 @@
-let startTime, endTime, timer, pauseTime, paused = false, accumulatedPauseTime = 0;
+        // Lógica em JavaScript
+        let startTime, endTime, timer, studyDuration = 0;
+        let paused = false, pauseTime, accumulatedPauseTime = 0;
 
-function startStudy() {
-    const discipline = document.getElementById('discipline').value;
-    const content = document.getElementById('content').value;
+        function startStudy() {
+            const discipline = document.getElementById('discipline').value.trim();
+            const content = document.getElementById('content').value.trim();
+            if (discipline === '' || content === '') {
+                showAlert('Por favor, preencha a Disciplina e o Conteúdo.');
+                return;
+            }
+            clearAlert();
+            startTime = new Date();
+            document.getElementById('startTime').innerText = startTime.toLocaleTimeString();
+            document.getElementById('studyTracking').style.display = 'block';
+            timer = setInterval(updateCurrentTime, 1000);
+        }
 
-    if (!discipline || !content) {
-        showAlert('Por favor, insira os dados de Disciplina e Conteúdo.');
-        return;
-    }
+        function finalizeStudy() {
+            endTime = new Date();
+            clearInterval(timer);
+            const duration = (endTime - startTime - accumulatedPauseTime) / 1000; // in seconds
+            studyDuration = duration;
+            document.getElementById('studyDuration').innerText = formatDuration(duration);
+            addHistory(startTime, document.getElementById('discipline').value, document.getElementById('content').value, studyDuration);
+            // Exibir o botão de resumo
+            const summaryButton = document.createElement('button');
+            summaryButton.innerText = 'Mostrar Resumo';
+            summaryButton.onclick = showSummary;
+            document.getElementById('studyTracking').appendChild(summaryButton);
+        }
 
-    clearAlert();
-    startTime = new Date();
-    document.getElementById('startTime').innerText = startTime.toLocaleTimeString();
-    timer = setInterval(updateCurrentTime, 1000);
-}
+        function showSummary() {
+            const discipline = document.getElementById('discipline').value.trim();
+            const content = document.getElementById('content').value.trim();
+            if (discipline === '' || content === '') {
+                showAlert('Por favor, preencha a Disciplina e o Conteúdo.');
+                return;
+            }
+            clearAlert();
+            // Exibir o resumo
+            document.getElementById('summaryDiscipline').innerText = discipline;
+            document.getElementById('summaryContent').innerText = content;
+            document.getElementById('summaryDuration').innerText = document.getElementById('studyDuration').innerText;
+            document.getElementById('summaryModal').style.display = 'block';
+        }
 
-function updateCurrentTime() {
-    const now = new Date();
-    document.getElementById('currentTime').innerText = now.toLocaleTimeString();
-    const elapsedTime = new Date(now - startTime - accumulatedPauseTime);
-    document.getElementById('elapsedTime').innerText = elapsedTime.toISOString().substr(11, 8);
-}
+        function closeSummary() {
+            // Fechar o resumo e resetar o formulário
+            document.getElementById('summaryModal').style.display = 'none';
+            resetForm();
+        }
 
-function finalizeStudy() {
-    if (!startTime) {
-        showAlert('O estudo não foi iniciado.');
-        return;
-    }
+        function updateCurrentTime() {
+            if (!paused) {
+                const now = new Date();
+                document.getElementById('currentTime').innerText = now.toLocaleTimeString();
+            }
+        }
 
-    clearInterval(timer);
-    endTime = new Date();
-    document.getElementById('endTime').innerText = endTime.toLocaleTimeString();
-    const elapsedTime = new Date(endTime - startTime - accumulatedPauseTime);
-    document.getElementById('elapsedTime').innerText = elapsedTime.toISOString().substr(11, 8);
+        function formatDuration(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
 
-    document.getElementById('summaryDiscipline').innerText = document.getElementById('discipline').value;
-    document.getElementById('summaryContent').innerText = document.getElementById('content').value;
-    document.getElementById('summaryDuration').innerText = elapsedTime.toISOString().substr(11, 8);
+        function addHistory(start, discipline, content, duration) {
+            if (discipline.trim() && content.trim()) {
+                const tableBody = document.getElementById('historyBody');
+                const newRow = tableBody.insertRow();
+                newRow.insertCell(0).innerText = start.toLocaleDateString();
+                newRow.insertCell(1).innerText = discipline;
+                newRow.insertCell(2).innerText = content;
+                newRow.insertCell(3).innerText = formatDuration(duration);
+            }
+        }
 
-    document.getElementById('summaryButton').style.display = 'block';
-}
+        function resetForm() {
+            document.getElementById('discipline').value = '';
+            document.getElementById('content').value = '';
+            document.getElementById('studyTracking').style.display = 'none';
+            document.getElementById('startTime').innerText = '';
+            document.getElementById('currentTime').innerText = '';
+            document.getElementById('studyDuration').innerText = '';
+            paused = false;
+            accumulatedPauseTime = 0;
+        }
 
-function showAlert(message) {
-    const alertDiv = document.getElementById('formAlert');
-    alertDiv.innerText = message;
-    alertDiv.style.display = 'block';
-}
+        function showAlert(message) {
+            const alertDiv = document.getElementById('formAlert');
+            alertDiv.innerText = message;
+            alertDiv.style.display = 'block';
+        }
 
-function clearAlert() {
-    const alertDiv = document.getElementById('formAlert');
-    alertDiv.innerText = '';
-    alertDiv.style.display = 'none';
-}
+        function clearAlert() {
+            const alertDiv = document.getElementById('formAlert');
+            alertDiv.innerText = '';
+            alertDiv.style.display = 'none';
+        }
 
-function downloadPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const discipline = document.getElementById('summaryDiscipline').innerText;
-    const content = document.getElementById('summaryContent').innerText;
-    const duration = document.getElementById('summaryDuration').innerText;
-    doc.text(`Disciplina: ${discipline}`, 10, 10);
-    doc.text(`Conteúdo: ${content}`, 10, 20);
-    doc.text(`Duração: ${duration}`, 10, 30);
-    doc.save('resumo_estudo.pdf');
-}
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const discipline = document.getElementById('summaryDiscipline').innerText;
+            const content = document.getElementById('summaryContent').innerText;
+            const duration = document.getElementById('summaryDuration').innerText;
+            doc.text(`Disciplina: ${discipline}`, 10, 10);
+            doc.text(`Conteúdo: ${content}`, 10, 20);
+            doc.text(`Duração: ${duration}`, 10, 30);
+            doc.save('resumo_estudo.pdf');
+        }
 
-function pauseStudy() {
-    if (!paused) {
-        pauseTime = new Date();
-        paused = true;
-        clearInterval(timer);
-    }
-}
+        function pauseStudy() {
+            if (!paused) {
+                pauseTime = new Date();
+                paused = true;
+                clearInterval(timer);
+            }
+        }
 
-function continueStudy() {
-    if (paused) {
-        const now = new Date();
-        accumulatedPauseTime += (now - pauseTime);
-        paused = false;
-        timer = setInterval(updateCurrentTime, 1000);
-    }
-}
+        function continueStudy() {
+            if (paused) {
+                const now = new Date();
+                accumulatedPauseTime += (now - pauseTime);
+                paused = false;
+                timer = setInterval(updateCurrentTime, 1000);
+            }
+        }
+   
