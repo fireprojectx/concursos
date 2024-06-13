@@ -188,11 +188,15 @@
             studyDuration = duration;
             document.getElementById('studyDuration').innerText = formatDuration(duration);
             addHistory(startTime, document.getElementById('discipline').value, document.getElementById('content').value, studyDuration);
-            // Exibir o botão de resumo
-            const summaryButton = document.createElement('button');
-            summaryButton.innerText = 'Mostrar Resumo';
-            summaryButton.onclick = showSummary;
-            document.getElementById('studyTracking').appendChild(summaryButton);
+            // Verificar se o botão de resumo já existe
+            if (!document.getElementById('showSummaryButton')) {
+                // Exibir o botão de resumo
+                const summaryButton = document.createElement('button');
+                summaryButton.innerText = 'Mostrar Resumo';
+                summaryButton.id = 'showSummaryButton';
+                summaryButton.onclick = showSummary;
+                document.getElementById('studyTracking').appendChild(summaryButton);
+            }
         }
 
         function showSummary() {
@@ -250,6 +254,11 @@
             document.getElementById('studyDuration').innerText = '';
             paused = false;
             accumulatedPauseTime = 0;
+            // Remover o botão de resumo
+            const summaryButton = document.getElementById('showSummaryButton');
+            if (summaryButton) {
+                summaryButton.remove();
+            }
         }
 
         function showAlert(message) {
@@ -295,3 +304,4 @@
     </script>
 </body>
 </html>
+
