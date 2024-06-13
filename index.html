@@ -27,8 +27,14 @@
             width: 100px;
         }
 
-        input {
+        input, textarea {
             padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: calc(100% - 110px);
+            height: 100px;
         }
 
         button {
@@ -113,15 +119,18 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
 </head>
 <body>
     <div id="app">
         <h1>Study Time</h1>
         <form id="productForm">
             <label for="discipline">Disciplina:</label>
-            <input type="text" id="discipline" name="discipline"><br><br>
+            <input type="text" id="discipline" name="discipline" style="width: calc(100% - 110px);"><br><br>
             <label for="content">Conteúdo:</label>
-            <input type="text" id="content" name="content"><br><br>
+            <input type="text" id="content" name="content" style="width: calc(100% - 110px);"><br><br>
+            <label for="notes">Anotações:</label>
+            <textarea id="notes" name="notes"></textarea><br><br>
             <div class="alert" id="formAlert" style="display:none;"></div>
             <button type="button" onclick="startStudy()">Iniciar Estudo</button>
         </form>
@@ -142,6 +151,7 @@
                         <th>Disciplina</th>
                         <th>Conteúdo</th>
                         <th>Duração</th>
+                        <th>Anotações</th>
                     </tr>
                 </thead>
                 <tbody id="historyBody">
@@ -157,10 +167,12 @@
                 <p>Disciplina: <span id="summaryDiscipline"></span></p>
                 <p>Conteúdo: <span id="summaryContent"></span></p>
                 <p>Duração: <span id="summaryDuration"></span></p>
+                <p>Anotações: <span id="summaryNotes"></span></p>
                 <button id="downloadSummary" onclick="downloadPDF()">Baixar PDF</button>
                 <button id="closeSummary" onclick="closeSummary()">Fechar</button>
             </div>
         </div>
+        <button id="downloadHistory" style="display:none;" onclick="downloadHistory()">Baixar Histórico</button>
     </div>
     <script>
         // Lógica em JavaScript
@@ -170,6 +182,7 @@
         function startStudy() {
             const discipline = document.getElementById('discipline').value.trim();
             const content = document.getElementById('content').value.trim();
+            const notes = document.getElementById('notes').value.trim();
             if (discipline === '' || content === '') {
                 showAlert('Por favor, preencha a Disciplina e o Conteúdo.');
                 return;
@@ -187,7 +200,7 @@
             const duration = (endTime - startTime - accumulatedPauseTime) / 1000; // in seconds
             studyDuration = duration;
             document.getElementById('studyDuration').innerText = formatDuration(duration);
-            addHistory(startTime, document.getElementById('discipline').value, document.getElementById('content').value, studyDuration);
+            addHistory(startTime, document.getElementById('discipline').value, document.getElementById('content').value, studyDuration, document.getElementById('notes').value);
             // Verificar se o botão de resumo já existe
             if (!document.getElementById('showSummaryButton')) {
                 // Exibir o botão de resumo
@@ -202,6 +215,7 @@
         function showSummary() {
             const discipline = document.getElementById('discipline').value.trim();
             const content = document.getElementById('content').value.trim();
+            const notes = document.getElementById('notes').value.trim();
             if (discipline === '' || content === '') {
                 showAlert('Por favor, preencha a Disciplina e o Conteúdo.');
                 return;
@@ -211,7 +225,9 @@
             document.getElementById('summaryDiscipline').innerText = discipline;
             document.getElementById('summaryContent').innerText = content;
             document.getElementById('summaryDuration').innerText = document.getElementById('studyDuration').innerText;
+            document.getElementById('summaryNotes').innerText = notes;
             document.getElementById('summaryModal').style.display = 'block';
+            document.getElementById('downloadHistory').style.display = 'inline'; // Exibir o botão para baixar histórico
         }
 
         function closeSummary() {
@@ -234,7 +250,7 @@
             return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function addHistory(start, discipline, content, duration) {
+        function addHistory(start, discipline, content, duration, notes) {
             if (discipline.trim() && content.trim()) {
                 const tableBody = document.getElementById('historyBody');
                 const newRow = tableBody.insertRow();
@@ -242,12 +258,14 @@
                 newRow.insertCell(1).innerText = discipline;
                 newRow.insertCell(2).innerText = content;
                 newRow.insertCell(3).innerText = formatDuration(duration);
+                newRow.insertCell(4).innerText = notes;
             }
         }
 
         function resetForm() {
             document.getElementById('discipline').value = '';
             document.getElementById('content').value = '';
+            document.getElementById('notes').value = '';
             document.getElementById('studyTracking').style.display = 'none';
             document.getElementById('startTime').innerText = '';
             document.getElementById('currentTime').innerText = '';
@@ -279,9 +297,11 @@
             const discipline = document.getElementById('summaryDiscipline').innerText;
             const content = document.getElementById('summaryContent').innerText;
             const duration = document.getElementById('summaryDuration').innerText;
+            const notes = document.getElementById('summaryNotes').innerText;
             doc.text(`Disciplina: ${discipline}`, 10, 10);
             doc.text(`Conteúdo: ${content}`, 10, 20);
             doc.text(`Duração: ${duration}`, 10, 30);
+            doc.text(`Anotações: ${notes}`, 10, 40);
             doc.save('resumo_estudo.pdf');
         }
 
@@ -301,7 +321,13 @@
                 timer = setInterval(updateCurrentTime, 1000);
             }
         }
+
+        function downloadHistory() {
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.table_to_sheet(document.querySelector('table'));
+            XLSX.utils.book_append_sheet(wb, ws, "Histórico de Estudos");
+            XLSX.writeFile(wb, "historico_estudos.xlsx");
+        }
     </script>
 </body>
 </html>
-
