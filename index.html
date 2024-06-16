@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Study Time</title>
     <style>
-        /* Estilos CSS */
-       body {
+    body {
     font-family: 'Arial', sans-serif;
     background-color: #f0f4f8;
     margin: 0;
@@ -17,7 +17,7 @@
 }
 
 .container {
-    background-color: ;
+    background-color: #fff; /* Ajustado para branco */
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -32,7 +32,7 @@ button {
     border: none;
     padding: 10px 20px;
     margin: 10px 0;
-    border-radius: 5px;
+    border-radius: 10px; /* Bordas arredondadas */
     cursor: pointer;
 }
 
@@ -54,109 +54,138 @@ input, select, textarea {
     box-sizing: border-box;
 }
 
-        h1, h2 {
-            color: #333;
-        }
+form {
+    margin-bottom: 20px;
+}
 
-        form {
-            margin-bottom: 20px;
-        }
+label {
+    display: inline-block;
+    width: 100px;
+}
 
-        label {
-            display: inline-block;
-            width: 100px;
-        }
+input, textarea {
+    padding: 5px;
+    margin-bottom: 10px;
+}
 
-        input, textarea {
-            padding: 5px;
-            margin-bottom: 10px;
-        }
+textarea {
+    width: calc(100% - 110px);
+    height: 100px;
+}
 
-        textarea {
-            width: calc(100% - 110px);
-            height: 100px;
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
-        button {
-            margin-top: 10px;
-            padding: 10px 15px;
-            background-color: #67B18F;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 10px; /* Bordas arredondadas */
-        }
+table, th, td {
+    border: 1px solid #ddd;
+}
 
-        button:hover {
-            background-color: #67B18F;
-        }
+th, td {
+    padding: 8px;
+    text-align: left;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+th {
+    background-color: #67B18F;
+    color: white;
+}
 
-        table, th, td {
-            border: 1px solid #ddd;
-        }
+#summaryModal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
 
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
+#summaryModalContent {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+}
 
-        th {
-            background-color: #67B18F;
-            color: white;
-        }
+#summaryModalContent h2, p {
+    color: #333;
+}
 
-        #summaryModal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            padding-top: 100px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
+#closeSummary {
+    background-color: #67B18F;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
 
-        #summaryModalContent {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-        }
+#closeSummary:hover {
+    background-color: #67B18F;
+}
 
-        #summaryModalContent h2, p {
-            color: #333;
-        }
+.alert {
+    color: red;
+}
 
-        #closeSummary {
-            background-color: #67B18F;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            border-radius: 10px;
-        }
+/* Novo estilo para a cor da fonte do tempo */
+#startTime, #currentTime, #studyDuration {
+    color: #333;
+}
 
-        #closeSummary:hover {
-            background-color: #67B18F;
-        }
+/* Estilos Responsivos */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
 
-        .alert {
-            color: red;
-        }
+    .container {
+        padding: 15px;
+        width: 100%;
+    }
 
-        /* Novo estilo para a cor da fonte do tempo */
-        #startTime, #currentTime, #studyDuration {
-            color: #333;
-        }
+    button {
+        width: 100%;
+        padding: 15px;
+    }
+
+    input, select, textarea {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    h2 {
+        font-size: 1.3em;
+    }
+
+    h3 {
+        font-size: 1.1em;
+    }
+
+    label {
+        width: 100%;
+    }
+
+    textarea {
+        width: 100%;
+        height: auto;
+    }
+
+    #summaryModalContent {
+        width: 90%;
+    }
+}
+  
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
